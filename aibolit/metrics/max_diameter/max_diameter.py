@@ -21,6 +21,7 @@
 # SOFTWARE.
 
 from aibolit.ast_framework import AST, ASTNode, ASTNodeType
+from aibolit.metrics.utils import get_last_line
 
 from typing import Dict, List, Tuple
 from collections import OrderedDict
@@ -39,9 +40,11 @@ class MaxDiameter:
         for method_ast in ast.get_subtrees(ASTNodeType.METHOD_DECLARATION):
             method_name = method_ast.get_root().name
             start_line = method_ast.get_root().line
+            end_line = get_last_line(method_ast.get_root())
+            end_line = end_line + 1 if end_line == start_line else end_line
 
             method_value = self._find_distant_node(method_ast, method_ast.get_root(), False)[1]
-            values_dict[f"{method_name}:{start_line}"] = method_value
+            values_dict[f"{method_name}:{start_line}:{end_line}"] = method_value
         return values_dict
 
 

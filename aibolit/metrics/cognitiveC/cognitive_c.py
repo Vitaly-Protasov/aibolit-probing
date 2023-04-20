@@ -1,9 +1,10 @@
 from itertools import groupby
-from aibolit.ast_framework import AST, ASTNodeType
 from typing import Dict, List, Set
 import re
 from collections import OrderedDict
 
+from aibolit.ast_framework import AST, ASTNodeType
+from aibolit.metrics.utils import get_last_line
 
 only_increment_for: Set[ASTNodeType] = set([
     ASTNodeType.BREAK_STATEMENT,
@@ -158,7 +159,9 @@ class CognitiveComplexity:
             method_declaration_index = method_ast.get_root().node_index
             self.__method_name = method_ast.get_root().name
             start_line = method_ast.get_root().line
+            end_line = get_last_line(method_ast.get_root())
+            end_line = end_line + 1 if end_line == start_line else end_line
 
             method_value = self._get_complexity(method_ast, method_declaration_index, 0)
-            values_dict[f"{self.__method_name}:{start_line}"] = method_value
+            values_dict[f"{self.__method_name}:{start_line}:{end_line}"] = method_value
         return values_dict
