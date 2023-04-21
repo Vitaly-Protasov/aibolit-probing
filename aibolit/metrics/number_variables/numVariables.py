@@ -38,7 +38,7 @@ class NumVars:
             for child in assigment_children:
                 if child.node_type == ASTNodeType.MEMBER_REFERENCE:
                     title = child.member
-            variables.add(title)
+                    variables.add(title)
 
         return len(variables)  
 
