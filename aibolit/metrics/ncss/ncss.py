@@ -20,7 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+from collections import OrderedDict
+from typing import Dict
+
 from aibolit.ast_framework import AST, ASTNode, ASTNodeType
+from aibolit.metrics.utils import get_last_line
 
 
 class NCSSMetric:
@@ -31,6 +35,22 @@ class NCSSMetric:
      - declarations from _declarations_node_types
      - local variable declarations and statement expressions
     """
+
+    def probing_values(self, ast: AST) -> Dict[str, int]:
+        """
+        NCSS metric for each method
+        """
+        values_dict = OrderedDict()
+        for method_ast in ast.get_subtrees(ASTNodeType.METHOD_DECLARATION):
+            method_name = method_ast.get_root().name
+            start_line = method_ast.get_root().line
+            end_line = get_last_line(method_ast.get_root())
+            end_line = end_line + 1 if end_line == start_line else end_line
+
+            method_value = self.value(method_ast)
+            values_dict[f"{method_name}:{start_line}:{end_line}"] = method_value
+        return values_dict
+
 
     def value(self, ast: AST) -> int:
         metric = 0

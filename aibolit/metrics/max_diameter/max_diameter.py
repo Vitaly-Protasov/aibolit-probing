@@ -56,9 +56,11 @@ class MaxDiameter:
         for method_ast in ast.get_subtrees(ASTNodeType.METHOD_DECLARATION):
             method_name = method_ast.get_root().name
             start_line = method_ast.get_root().line
+            end_line = get_last_line(method_ast.get_root())
+            end_line = end_line + 1 if end_line == start_line else end_line
             
             method_value = self._calcalute_diameter(method_ast)
-            values_dict[f"{method_name}:{start_line}"] = method_value
+            values_dict[f"{method_name}:{start_line}:{end_line}"] = method_value
         return values_dict
 
 

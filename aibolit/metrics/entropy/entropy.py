@@ -40,7 +40,7 @@ class Entropy:
         tokens = javalang.tokenizer.tokenize(source_code)
         return [token.value for token in tokens]
 
-    def value(self, filename: str):
+    def value(self, filename: str) -> float:
         tokens = self.__file_to_tokens(filename)
         _, counts = np.unique(tokens, return_counts=True)
         return entropy(counts)
